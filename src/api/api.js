@@ -39,9 +39,18 @@ export function videoInfo(id){
         }
     })
 }
+//获取所有视频数量
 export function totalVideo(){
     return request({
         method:'GET',
         url:'/video/count',
+    })
+}
+//上传视频
+export function loadVideo(data){
+    return request({
+        method:'POST',
+        url:'/file',
+        data
     })
 }

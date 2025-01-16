@@ -14,7 +14,7 @@
         <el-button type="primary" round @click="login">登陆</el-button>
       </div>
       <div class="logout" v-else>
-        <el-button type="primary" round @click="loadVideo">上传视频</el-button>
+        <el-button type="primary" round @click="load">上传视频</el-button>
         <el-button type="warning" round @click="logout">登出</el-button>
       </div>
       <el-dialog
@@ -31,7 +31,7 @@
           </el-form-item>
           <el-form-item>
             <div class="btn">
-              <el-button type="primary" size="medium" @click="submitForm">提交</el-button>
+              <el-button type="primary" size="medium" @click="submitForm">登陆</el-button>
               <el-button type="warning" size="medium" @click="resetForm('ruleForm')">重置</el-button>
             </div>
           </el-form-item>
@@ -39,16 +39,44 @@
       </el-dialog>
       <el-dialog
         :visible.sync="loadDialogVisible"
-        width="500px"
+        width="400px"
         center>
-        <el-form  status-icon  label-width="50px" class="demo-ruleForm">
-          <el-form-item label="账号" prop="user">
-            <el-input type="text" v-model="ruleForm.user" autocomplete="off"></el-input>
+        <el-form :model="loadForm"  status-icon :rules="loadRules" ref="loadForm"  label-width="50px" class="demo-ruleForm">
+          <el-form-item label="标题" prop="title" required>
+            <el-input type="text" v-model="loadForm.title" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="封面" prop="cover" required>
+            <el-upload
+            action=""
+            class="upload-demo"
+            accept=".png,.jpg"
+            :show-file-list="true"
+            :http-request="loadImage"
+            :on-remove="handleImageRemove"
+            :file-list="imageList">
+            <el-button size="small" type="primary">上传封面</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="视频" prop="video" required>
+            <el-upload
+            action=""
+            class="upload-demo"
+            accept=".mp4"
+            :show-file-list="true"
+            :http-request="loadVideo"
+            :on-remove="handleVideoRemove"
+            :file-list="videoList">
+            <el-button size="small" type="primary">上传视频</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传mp4文件</div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="简介" prop="introduction">
+            <el-input type="textarea" :rows="3" v-model="loadForm.introduction" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item>
             <div class="btn">
-              <el-button type="primary" size="medium" @click="submitForm">提交</el-button>
-              <el-button type="warning" size="medium" @click="resetForm('ruleForm')">重置</el-button>
+              <el-button type="primary" size="medium" @click="submitVideoForm('loadForm')">提交</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -67,7 +95,7 @@ Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(Image);
 Vue.use(Upload);
-import { Login ,userInfo} from '@/api/api';
+import { Login ,userInfo,loadVideo} from '@/api/api';
 export default {
     name:'homeHeader',
     data(){
@@ -98,6 +126,25 @@ export default {
           user:'',
           pass:''
         },
+        loadForm:{
+          title:'',
+          introduction:'',
+          video:'',
+          cover:''
+        },
+        loadRules:{
+          title: [
+            {  required: true, message: '请输入标题', trigger: 'blur' }
+          ],
+          cover: [
+            {  required: true, message: '请上传封面', trigger: 'blur' }
+          ],
+          video: [
+            {  required: true, message: '请上传视频', trigger: 'blur' }
+          ],
+        },
+        imageList:[],
+        videoList:[],
         rules: {
           user: [
             { validator: validateUser, trigger: 'blur' }
@@ -154,7 +201,7 @@ export default {
             }
           })
       },
-      //重置表单
+      //重置登陆表单
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
@@ -174,8 +221,45 @@ export default {
         }
       },
       //上传初始化
-      loadVideo(){
+      load(){
         this.loadDialogVisible = true
+      },
+      loadImage(e){
+        this.loadForm.cover = e.file
+      },
+      handleImageRemove(file,fileList){
+        this.fileList = fileList
+      },
+      loadVideo(e){
+        this.loadForm.video = e.file
+      },
+      handleVideoRemove(file,fileList){
+        this.fileList = fileList
+      },
+      //上传提交表单
+      submitVideoForm(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let h = {
+              user_id:this.userID,
+              video:this.loadForm.video,
+              cover:this.loadForm.cover,
+              title:this.loadForm.title,
+              introduction:this.loadForm.introduction,
+            };
+            loadVideo(h).then(res=>{
+              if(res.data.code == 200){
+                this.$message({
+                  message: '上传成功',
+                  type: 'success'
+                });
+                this.loadDialogVisible = false
+              }
+            })
+          } else { 
+            return false;
+          }
+        });
       }
     },
     mounted(){
@@ -231,13 +315,16 @@ export default {
       .demo-ruleForm{
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: start;
         justify-content: center;
         .el-form-item{
           margin-bottom: 20px;
         }
         .el-input{
           width: 250px;
+        }
+        .el-button{
+          padding: 10px 20px;
         }
         .btn{
           width: 260px;

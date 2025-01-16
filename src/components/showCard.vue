@@ -9,12 +9,12 @@
           @click="enterUrl"
           lazy></el-image>
       </div>
-      <el-tooltip class="info" effect="dark" :content="title" placement="bottom-start">
-        <h2>{{ title }}</h2>
+      <el-tooltip class="info" effect="dark" :content="title" placement="top-start">
+        <h2 @click="enterUrl">{{ title }}</h2>
       </el-tooltip>
-      <el-tooltip class="author" effect="dark" :content="`创作时间：`+time" placement="bottom-start">
+      <div class="createtime">
         <p>创作时间：{{ time }}</p>
-      </el-tooltip>
+      </div>
     </el-card>
   </div>
 </template>
@@ -98,18 +98,14 @@ export default {
       color:skyblue,
     }
   }
-  .author{
+  .createtime{
     width: 360px;
     height: 25px;
     margin: 0 auto;
     text-align: start;
-    cursor: pointer;
     white-space: nowrap;      
     overflow: hidden;           
     text-overflow: ellipsis; 
     font-size: 14px;
-    &:hover{
-      color:skyblue,
-    }
   }
 </style>

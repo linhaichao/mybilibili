@@ -49,6 +49,7 @@ export default {
     }
   },
   methods:{
+    //进入播放页面
     enterUrl(){
       this.$router.push({
         name:'videoPlay',

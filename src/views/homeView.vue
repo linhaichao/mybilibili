@@ -44,6 +44,7 @@ export default {
         this.getUserVideoInfo(val)
         console.log(`当前页: ${val}`);
       },
+      //页面发生改变触发回调
         getUserVideoInfo(page){
           userVideoInfo(page).then(res=>{
           if(res.data.code == 200){
@@ -51,6 +52,7 @@ export default {
           }
         })
       },
+      //获取视频总数
       getTotalVideo(){
         totalVideo().then(res=>{
           if(res.data.code == 200){

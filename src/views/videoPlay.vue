@@ -78,6 +78,7 @@ mounted(){
     this.getUserVideoInfo();
 },
 methods:{
+    //获取视频详细信息
     getVideoInfo(){
         let id = this.$route.params.videoID
         videoInfo(id).then(res=>{
@@ -87,6 +88,7 @@ methods:{
             this.getUserInfo(res.data.info.author_id)
         })
     },
+    //获取用户信息
     getUserInfo(id){
         userInfo(id).then(res=>{
             if(res.data.code == 200){
@@ -94,6 +96,7 @@ methods:{
             }
         })
     },
+    //获取用户简略视频信息
     getUserVideoInfo(){
         userVideoInfo(1).then(res=>{
             if(res.data.code == 200){
@@ -101,6 +104,7 @@ methods:{
             }
         })
     },
+    //点击右边视频刷新数据
     enterUrl(e){
         let videoinfo = this.moreVideoInfo.find(a=>{
             return a.cover_url == e.target.src

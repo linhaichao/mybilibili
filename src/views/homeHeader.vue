@@ -95,6 +95,7 @@ export default {
       login(){
         this.loginDialogVisible = true
       },
+      //登出
       logout(){
         this.ruleForm.user = '';
         this.ruleForm.pass = '';
@@ -102,6 +103,7 @@ export default {
         this.userID = []
         localStorage.removeItem('userID')
       },
+      //提交表单
       async submitForm() {
         let h = {
             username:this.ruleForm.user,
@@ -133,9 +135,11 @@ export default {
             }
           })
       },
+      //重置表单
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
+      //获取用户信息
       getUserInfo(){
         userInfo(this.userID).then(res=>{
           if(res.data.code == 200){
@@ -143,6 +147,7 @@ export default {
           }
         })
       },
+      //初始化页面
       init(){
           if(localStorage.getItem('userID')){
           this.userID = localStorage.getItem('userID')

@@ -2,8 +2,8 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
+    allowedHosts: ['bilibili.hardews.cn'],
     proxy:{
-        allowedHosts: ['bilibili.hardews.cn'],
         "/":{
             target:'https://video.hardews.cn',//跨域请求的公共地址
             ws:false, //也可以忽略不写，不写不会影响跨域

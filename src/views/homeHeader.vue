@@ -14,6 +14,7 @@
         <el-button type="primary" round @click="login">登陆</el-button>
       </div>
       <div class="logout" v-else>
+        <el-button type="primary" round @click="loadVideo">上传视频</el-button>
         <el-button type="warning" round @click="logout">登出</el-button>
       </div>
       <el-dialog
@@ -36,19 +37,36 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <el-dialog
+        :visible.sync="loadDialogVisible"
+        width="500px"
+        center>
+        <el-form  status-icon  label-width="50px" class="demo-ruleForm">
+          <el-form-item label="账号" prop="user">
+            <el-input type="text" v-model="ruleForm.user" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <div class="btn">
+              <el-button type="primary" size="medium" @click="submitForm">提交</el-button>
+              <el-button type="warning" size="medium" @click="resetForm('ruleForm')">重置</el-button>
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import {Button,Dialog,Form,FormItem,Input,Image} from 'element-ui'
+import {Button,Dialog,Form,FormItem,Input,Image,Upload} from 'element-ui'
 Vue.use(Button);
 Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(Image);
+Vue.use(Upload);
 import { Login ,userInfo} from '@/api/api';
 export default {
     name:'homeHeader',
@@ -75,6 +93,7 @@ export default {
       };
       return {
         loginDialogVisible:false,
+        loadDialogVisible:false,
         ruleForm:{
           user:'',
           pass:''
@@ -153,6 +172,10 @@ export default {
           this.userID = localStorage.getItem('userID')
           this.getUserInfo()
         }
+      },
+      //上传初始化
+      loadVideo(){
+        this.loadDialogVisible = true
       }
     },
     mounted(){
@@ -168,7 +191,7 @@ export default {
     }
   .header{
     width: 100%;
-    min-width: 1200px;
+    min-width: 1600px;
     height: 100px;
     background-color: rgb(235, 235, 235);
     margin-bottom: 10px;

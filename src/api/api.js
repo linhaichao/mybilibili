@@ -39,3 +39,9 @@ export function videoInfo(id){
         }
     })
 }
+export function totalVideo(){
+    return request({
+        method:'GET',
+        url:'/video/count',
+    })
+}

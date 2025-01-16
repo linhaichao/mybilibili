@@ -2,8 +2,13 @@
   <div>
     <div class="header">
       <div class="userInfo" v-if="userID">
-        <div class="userimg"><i class="el-icon-s-custom"></i></div>
-        <div class="username">{{ username }}</div>
+        <div class="userimg">
+          <el-image
+              style="width: 80px; height: 80px;border-radius: 50%;"
+              :src="userInfo.avatar_url"
+              fit="cover"></el-image>
+        </div>
+        <div class="username">{{ userInfo.nick_name }}</div>
       </div>
       <div class="login" v-if="!userID">
         <el-button type="primary" round @click="login">登陆</el-button>
@@ -37,13 +42,14 @@
 
 <script>
 import Vue from 'vue'
-import {Button,Dialog,Form,FormItem,Input} from 'element-ui'
+import {Button,Dialog,Form,FormItem,Input,Image} from 'element-ui'
 Vue.use(Button);
 Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
-// import { Login } from '@/api/api';
+Vue.use(Image);
+import { Login ,userInfo} from '@/api/api';
 export default {
     name:'homeHeader',
     data(){
@@ -81,7 +87,8 @@ export default {
             { validator: validatePass, trigger: 'blur' }
           ],
         },
-        userID:''
+        userID:'',
+        userInfo:[],
       }
     },
     methods:{
@@ -89,43 +96,62 @@ export default {
         this.loginDialogVisible = true
       },
       logout(){
-        this.$router.push('/');
         this.ruleForm.user = '';
         this.ruleForm.pass = '';
-        this.userID = ''
-        this.loginDialogVisible = true
+        this.userID = '',
+        this.userID = []
+        localStorage.removeItem('userID')
       },
       async submitForm() {
-        // let h = {
-        //     username:this.ruleForm.user,
-        //     password:this.ruleForm.pass
+        let h = {
+            username:this.ruleForm.user,
+            password:this.ruleForm.pass
 
-        //   }
-        //   await Login(h).then(res=>{
-        //     if(res.code == 200){
-        //       if(res.id == 1){
-        //         this.userID = res.id
-        //           this.$message({
-        //           message: '登陆成功',
-        //           type: 'success'
-        //         });
-        //         this.$emit('getUserID',res.id)
-        //         this.loginDialogVisible = false
-        //       }else{
-        //         alert("登陆失败，请检查账户和密码是否正确！！")
-        //       }
-        //     }else{
-        //       this.$message({
-        //           message: res.data,
-        //           type: 'error'
-        //         });
-        //     }
-        //   })
-      
+          }
+          await Login(h).then(res=>{
+            if(res.data.code == 200){
+              if(res.data.id == 1){
+                this.userID = res.data.id
+                  this.$message({
+                  message: '登陆成功',
+                  type: 'success'
+                });
+                this.getUserInfo()
+                localStorage.setItem('userID',res.data.id)
+                this.loginDialogVisible = false
+              }else{
+                this.$message({
+                  message: "登陆失败，请检查账户和密码是否正确！！",
+                  type: 'error'
+                });
+              }
+            }else{
+              this.$message({
+                  message: "登陆失败，请检查账户和密码是否正确！！",
+                  type: 'error'
+                });
+            }
+          })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
+      getUserInfo(){
+        userInfo(this.userID).then(res=>{
+          if(res.data.code == 200){
+            this.userInfo = res.data.info
+          }
+        })
+      },
+      init(){
+          if(localStorage.getItem('userID')){
+          this.userID = localStorage.getItem('userID')
+          this.getUserInfo()
+        }
+      }
+    },
+    mounted(){
+      this.init();
     }
 }
 </script>
@@ -150,8 +176,8 @@ export default {
       justify-content: space-around;
       align-items: center;
       .userimg{
-        width: 50px;
-        height: 50px;
+        width: 80px;
+        height: 80px;
         display: flex;
         justify-content: center;
         align-items: center;

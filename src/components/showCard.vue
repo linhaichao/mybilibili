@@ -4,16 +4,16 @@
       <div class="picture">
         <el-image
           style="width: 360px; height: 200px;border-radius: 10px;"
-          :src="url"
-          fit="fit"
+          :src="coverUrl"
+          fit="cover"
           @click="enterUrl"
           lazy></el-image>
       </div>
-      <el-tooltip class="info" effect="dark" :content="infoContent" placement="bottom-start">
-        <p>{{ infoContent }}</p>
+      <el-tooltip class="info" effect="dark" :content="title" placement="bottom-start">
+        <h2>{{ title }}</h2>
       </el-tooltip>
-      <el-tooltip class="author" effect="dark" :content="authorContent" placement="bottom-start">
-        <p>{{ authorContent }}</p>
+      <el-tooltip class="author" effect="dark" :content="`创作时间：`+time" placement="bottom-start">
+        <p>创作时间：{{ time }}</p>
       </el-tooltip>
     </el-card>
   </div>
@@ -28,13 +28,19 @@ Vue.use(Image);
 export default {
   name:'showCard',
   props:{
-    infoContent:{
+    coverUrl:{
       type:String,
-      default:'视频信息'
+      default:''
     },
-    authorContent:{
+    title:{
       type:String,
-      default:'作者信息'
+      default:'视频标题'
+    },
+    time:{
+      type:String,
+    },
+    videoID:{
+      type:Number,
     },
   },
   data(){
@@ -42,12 +48,13 @@ export default {
       url:require("../assets/logo.png")
     }
   },
-  mounted(){
-    
-  },
   methods:{
     enterUrl(){
-      this.$router.push('/videoPlay')
+      this.$router.push({
+        name:'videoPlay',
+        params:{videoID:this.videoID},
+        query:{id:this.videoID}
+      });
     }
   }
 }
@@ -85,7 +92,7 @@ export default {
     word-wrap: break-word;
     word-break: keep-all;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 18px;
     &:hover{
       color:skyblue,
     }

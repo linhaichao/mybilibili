@@ -1,19 +1,21 @@
 <template>
   <div class="home">
-    <homeHeader @getUserID="handleUserID"></homeHeader>
+    <homeHeader></homeHeader>
     <div class="homebody">
       <div class="content">
-        <showCard></showCard>
+        <div v-for="(item,index) in videoInfo" :key="index">
+          <showCard :coverUrl="item.cover_url" :title="item.title" :time="item.created_time" :videoID="item.video_id"></showCard>
+        </div>
       </div>
       <el-pagination
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[4, 8, 12, 16]"
-        :page-size="4"
+        :page-sizes="[12]"
+        :page-size="12"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="40"
-        background>
+        :total=totalItem
+        background
+        hide-on-single-page>
       </el-pagination>
     </div>
   </div>
@@ -23,7 +25,7 @@
 import showCard from '@/components/showCard.vue'
 import homeHeader from './homeHeader.vue'
 import {Pagination} from 'element-ui'
-import {userVideoInfo} from '@/api/api'
+import {userVideoInfo,totalVideo} from '@/api/api'
 export default {
   name: 'homeView',
   components: {
@@ -32,29 +34,34 @@ export default {
   data(){
     return {
       currentPage:1,
-      userID:''
+      userID:'',
+      videoInfo:[],
+      totalItem:0
     }
   },
   methods: {
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
       handleCurrentChange(val) {
+        this.getUserVideoInfo(val)
         console.log(`当前页: ${val}`);
       },
-      handleUserID(data){
-        this.userID = data
-        // this.getUserVideoInfo();
-      },
-        getUserVideoInfo(){
-          userVideoInfo(this.currentPage).then(res=>{
-          //替换
-          console.log(res)
+        getUserVideoInfo(page){
+          userVideoInfo(page).then(res=>{
+          if(res.data.code == 200){
+            this.videoInfo = res.data.info
+          }
         })
-      }
+      },
+      getTotalVideo(){
+        totalVideo().then(res=>{
+          if(res.data.code == 200){
+            this.totalItem = res.data.count
+          }
+        })
+      },
     },
     mounted(){
-      this.getUserVideoInfo()
+      this.getUserVideoInfo(1);
+      this.getTotalVideo();
     }
 }
 </script>
@@ -80,7 +87,7 @@ export default {
         }
       }
       .el-pagination{
-        margin: 0 auto;
+        margin: 10px auto;
       }
   }
 </style>

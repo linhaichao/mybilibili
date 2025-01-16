@@ -228,31 +228,39 @@ export default {
         this.loadForm.cover = e.file
       },
       handleImageRemove(file,fileList){
-        this.fileList = fileList
+        this.imageList = fileList
       },
       loadVideo(e){
         this.loadForm.video = e.file
       },
       handleVideoRemove(file,fileList){
-        this.fileList = fileList
+        this.videoList = fileList
       },
       //上传提交表单
       submitVideoForm(formName){
+        console.log(this.loadForm.cover)
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            let h = {
-              user_id:this.userID,
-              video:this.loadForm.video,
-              cover:this.loadForm.cover,
-              title:this.loadForm.title,
-              introduction:this.loadForm.introduction,
-            };
+            let h = new FormData()
+            h.append('user_id',this.userID);
+            h.append('title', this.loadForm.title);
+            h.append('introduction', this.loadForm.introduction);
+            h.append('video', this.loadForm.video);  
+            h.append('cover', this.loadForm.cover); 
             loadVideo(h).then(res=>{
               if(res.data.code == 200){
                 this.$message({
                   message: '上传成功',
                   type: 'success'
                 });
+                this.loadForm ={
+                  title:'',
+                  introduction:'',
+                  video:'',
+                  cover:''
+                },
+                this.imageList=[];
+                this.videoList=[]
                 this.loadDialogVisible = false
               }
             })

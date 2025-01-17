@@ -11,7 +11,7 @@
                     <div class="videotime">时间：{{ videoInfo.created_time }}</div>
                 </div>
                 <div class="video">
-                    <!-- <playVideo></playVideo> -->
+                    <playVideo v-if="videoInfo" :cover_url="videoInfo.cover_url" :video_url="videoInfo.video_url"></playVideo>
                 </div>
                 <div class="videoInfo">
                     <el-tooltip class="Info" effect="dark" :content="`视频简介：`+videoInfo.introduction" placement="top">
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-// import playVideo from '@/components/playVideo.vue'
+import playVideo from '@/components/playVideo.vue'
 import Vue from 'vue'
 import {Tooltip,Image,Button} from 'element-ui'
 Vue.use(Tooltip);
@@ -66,6 +66,7 @@ Vue.use(Button);
 import {videoInfo,userInfo,userVideoInfo} from '@/api/api'
 export default {
 name:'videoPlay',
+components:{playVideo},
 data(){
     return {
         videoInfo:'',

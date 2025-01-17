@@ -6,6 +6,10 @@ import {Message} from 'element-ui'
 Vue.component(Message)
 Vue.prototype.$message = Message
 
+import VueDPlayer from "vue-dplayer";
+import "vue-dplayer/dist/vue-dplayer.css";
+Vue.use(VueDPlayer);
+
 Vue.config.productionTip = false
 
 new Vue({

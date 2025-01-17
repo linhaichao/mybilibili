@@ -7,10 +7,10 @@
   <script>
   export default {
     name: "playVideo",
-    props:{
-        cover_url:String,
-        video_url:String,
-    },
+    // props:{
+    //     // cover_url:String,
+    //     video_url:String,
+    // },
     data() {
       return {
         options: {
@@ -26,7 +26,7 @@
           playbackSpeed: [0.5, 0.75, 1, 1.25, 1.5, 2, 3], //可选的播放速度，可自定义
           video: {
             type:'auto',
-            url:this.video_url, // 播放视频的路径
+            url:require('@/assets/Screenrecorder-2025-01-10-23-04-38-641.mp4'), // 播放视频的路径
             // quality: [
             //   // 设置多个质量的视频
             //   {
@@ -41,7 +41,7 @@
             //   }
             // ],
             defaultQuality: 0, // 默认是高清
-            // pic:this.cover_url, // 视频封面图片
+            pic:require("@/assets/logo.png"), // 视频封面图片
           },
         //   danmaku: {
         //     // 弹幕

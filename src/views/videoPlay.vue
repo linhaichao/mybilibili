@@ -11,7 +11,7 @@
                     <div class="videotime">时间：{{ videoInfo.created_time }}</div>
                 </div>
                 <div class="video">
-                    <playVideo v-if="videoInfo" :cover_url="videoInfo.cover_url" :video_url="videoInfo.video_url"></playVideo>
+                    <playVideo></playVideo>
                 </div>
                 <div class="videoInfo">
                     <el-tooltip class="Info" effect="dark" :content="`视频简介：`+videoInfo.introduction" placement="top">
@@ -116,6 +116,7 @@ methods:{
             }
             this.getUserInfo(res.data.info.author_id)
         })
+        // location.reload()
     },
     back(){
         this.$router.push('/')

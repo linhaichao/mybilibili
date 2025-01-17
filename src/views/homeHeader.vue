@@ -163,11 +163,12 @@ export default {
       },
       //登出
       logout(){
+        localStorage.removeItem('userID')
         this.ruleForm.user = '';
         this.ruleForm.pass = '';
         this.userID = '',
         this.userID = []
-        localStorage.removeItem('userID')
+        location.reload()
       },
       //提交表单
       async submitForm() {
